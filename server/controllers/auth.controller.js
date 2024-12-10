@@ -20,7 +20,7 @@ export const signup = async (req, res) => {
                 message: "User already exists"
             });
         }
-        const hashedPassword = await bcryptjs.hash(password, 10);
+        let hashedPassword = password ? await bcryptjs.hash(password, 10) : undefined;
         const verificationToken = Math.floor(100000 + Math.random() * 900000).toString();
         const user = new User({
             name,
@@ -43,6 +43,7 @@ export const signup = async (req, res) => {
             }
         })
     } catch (error) {
+        console.error("Error during signup:", error);
         return res.status(400).json({
             success: false,
             message: error.message
